@@ -1,13 +1,16 @@
-import { ICart } from "../context";
+import { ICart, IDispatch } from "../context";
 
-// export const ACTIONS = {
-//   LOAD: "load",
-// };
+export const ACTIONS = {
+  ADD: "add",
+};
 
-export function reducer(state: ICart, action: { type: string }) {
+function addCart() {}
+
+export function reducer(state: ICart, action: IDispatch) {
   switch (action.type) {
-    // case ACTIONS.LOAD:
-    //   return state;
+    case ACTIONS.ADD:
+      return;
+
     default:
       return state;
   }

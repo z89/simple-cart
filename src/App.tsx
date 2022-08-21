@@ -1,11 +1,10 @@
 import { CartProvider } from "./store";
-import Cart from "./components/Cart";
+import Home from "./Home";
 
 function App() {
   return (
     <CartProvider>
-      <h1>cart state:</h1>
-      <Cart />
+      <Home />
     </CartProvider>
   );
 }

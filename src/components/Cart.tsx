@@ -1,12 +1,14 @@
 import { useContext } from "react";
-import { CartContext } from "../context";
+import { CartContext, ICartItem } from "../context";
 
-export default function ShowCart() {
+export default function Cart() {
   const { state } = useContext(CartContext);
 
-  return (
-    <div>
-      <p>length: {state.length}</p>
-    </div>
-  );
+  function length() {
+    return state.length;
+  }
+
+  function items() {
+    return state.items;
+  }
 }
