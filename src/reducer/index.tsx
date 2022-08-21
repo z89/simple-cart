@@ -5,8 +5,7 @@ export const ACTIONS = {
   ADD: "add",
 };
 
-function addCart(state, payload) {
-  // create a new item
+function add(state, payload) {
   const item: ICartItem = {
     name: payload.name,
     desc: payload.desc,
@@ -25,12 +24,6 @@ function addCart(state, payload) {
 export function reducer(state: ICart, action: IDispatch) {
   switch (action.type) {
     case ACTIONS.ADD:
-      return addCart(state, action.payload);
-    default:
-      return {
-        length: state.length,
-        total: state.total,
-        items: state.items,
-      };
+      return add(state, action.payload);
   }
 }

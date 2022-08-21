@@ -14,22 +14,14 @@ export default function Home() {
     <div>
       <h1>cart state:</h1>
       <p>cart length: {state.length}</p>
-      <h1>add item:</h1>
-      <button
-        onClick={() => {
-          console.log("called");
-          dispatch({
-            type: ACTIONS.ADD,
-            payload: {
-              name: "item",
-              desc: "item desc",
-              quantity: 2,
-            },
-          });
-        }}
-      >
-        create item
-      </button>
+      <p>cart product 1 quantity: {state.items[1].quantity}</p>
+      <p>cart total: {state.total.formatted_with_code}</p>
+      {state.items.map((item) => (
+        <div>
+          <p>{JSON.stringify(item, null, 1)}</p>
+        </div>
+      ))}
+      <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { name: "item", desc: "item desc", quantity: 2 } })}>add product to cart</button>
     </div>
   );
 }
