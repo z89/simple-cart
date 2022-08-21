@@ -6,9 +6,9 @@ import { ACTIONS } from "./reducer";
 export default function Home() {
   const { state, dispatch } = useContext(CartContext);
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
+  //   useEffect(() => {
+  //     console.log(state);
+  //   }, [state]);
 
   return (
     <div>
@@ -22,6 +22,8 @@ export default function Home() {
         </div>
       ))}
       <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { name: "item", desc: "item desc", price: 10, quantity: 1 } })}>add product to cart</button>
+      <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { name: "anotheritem", desc: "item desc", price: 10, quantity: 1 } })}>add product to cart</button>
+      <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { name: "anotheritem1", desc: "item desc", price: 10, quantity: 1 } })}>add product to cart</button>
     </div>
   );
 }

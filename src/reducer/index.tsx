@@ -9,15 +9,7 @@ export const ACTIONS = {
 
 // check if item exists in cart
 function itemExists(items: ICartItem[], id: string) {
-  let index = -1;
-
-  items.map((item, idx) => {
-    if (item.id == id) {
-      index = idx;
-    }
-  });
-
-  return index;
+  return items.find((item) => item.id == id);
 }
 
 // add a new item to cart
@@ -30,13 +22,13 @@ function add(state: ICart, item: ICartItem) {
 }
 
 // update an item in cart
-function update(state: ICart, item: ICartItem, index: number) {
-  item.quantity += state.items[index].quantity;
-  item.total = formatToCurrency(item.price.raw * item.quantity);
+function update(state: ICart, updated: ICartItem, current: ICartItem) {
+  let updatedQty = current.quantity + updated.quantity;
+  const items = state.items.map((e) => (e.id == updated.id ? { ...e, quantity: updatedQty, total: formatToCurrency(updated.price.raw * updatedQty) } : e));
 
   return {
     length: state.length,
-    items: [...state.items.slice(0, index), item],
+    items: items,
     total: formatToCurrency(state.total.raw),
   };
 }
@@ -53,7 +45,7 @@ function addProduct(state, payload) {
 
   const res = itemExists(state.items, item.id);
 
-  if (res == -1) {
+  if (res == undefined) {
     return add(state, item);
   } else {
     return update(state, item, res);
