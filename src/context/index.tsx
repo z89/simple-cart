@@ -12,7 +12,7 @@ export interface ISubtotal {
 export interface ICartItem {
   name: string;
   desc: string;
-  id: string;
+  id: number;
   price: ISubtotal;
   quantity: number;
 }
@@ -20,13 +20,13 @@ export interface ICartItem {
 export interface ICart {
   length: number;
   items: ICartItem[];
-  balance: ISubtotal;
+  total: ISubtotal;
 }
 
 export const initialState: ICart = {
   length: 0,
   items: [],
-  balance: currencyFormat(0),
+  total: currencyFormat(0),
 };
 
 export interface IDispatch {
