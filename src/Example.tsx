@@ -1,17 +1,13 @@
 import { CartContext } from "./context";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import { ACTIONS } from "./reducer";
 import Product from "./components/Product";
 
 import data from "./data/products.json";
 
-export default function Home() {
+export default function Example() {
   const { state, dispatch } = useContext(CartContext);
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
 
   const Products = () => {
     if (data.length > 0) {

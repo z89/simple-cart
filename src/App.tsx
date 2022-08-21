@@ -1,11 +1,11 @@
 import { CartProvider } from "./store";
 
-import Home from "./Home";
+import Example from "./Example";
 
 function App() {
   return (
     <CartProvider>
-      <Home />
+      <Example />
     </CartProvider>
   );
 }
