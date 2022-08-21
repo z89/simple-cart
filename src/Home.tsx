@@ -25,8 +25,8 @@ export default function Home() {
     <div>
       <h1>cart state:</h1>
       <p>cart length: {state.length}</p>
-      <p>cart product 1 quantity: {state.items[1]?.quantity}</p>
       <p>cart total: {state.total.formatted_with_code}</p>
+      <button onClick={() => dispatch({ type: ACTIONS.CLEAR })}>clear cart</button>
       {Products()}
     </div>
   );

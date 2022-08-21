@@ -33,7 +33,7 @@ export const initialState: ICart = {
 
 export interface IDispatch {
   type: string;
-  payload: any;
+  payload?: ICartItem;
 }
 
 interface ICartContext {
