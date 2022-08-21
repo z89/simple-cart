@@ -3,6 +3,7 @@
     "target": "ESNext",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "strict": false,
     "moduleResolution": "node",
     "jsx": "react-jsx"

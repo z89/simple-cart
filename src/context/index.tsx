@@ -11,6 +11,7 @@ export interface ISubtotal {
 
 export interface ICartItem {
   id: string;
+  image: string;
   name: string;
   desc: string;
   price: ISubtotal;

@@ -1,4 +1,5 @@
 import { CartProvider } from "./store";
+
 import Home from "./Home";
 
 function App() {
