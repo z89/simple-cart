@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import currencyFormat from "../components/misc/currencyFormat";
+import formatToCurrency from "../components/misc/formatToCurrency";
 
 export interface ISubtotal {
   raw: number;
@@ -10,11 +10,12 @@ export interface ISubtotal {
 }
 
 export interface ICartItem {
+  id: string;
   name: string;
   desc: string;
-  id: number;
   price: ISubtotal;
   quantity: number;
+  total: ISubtotal;
 }
 
 export interface ICart {
@@ -26,7 +27,7 @@ export interface ICart {
 export const initialState: ICart = {
   length: 0,
   items: [],
-  total: currencyFormat(0),
+  total: formatToCurrency(0),
 };
 
 export interface IDispatch {
