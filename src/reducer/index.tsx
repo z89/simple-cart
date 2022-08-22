@@ -22,11 +22,16 @@ function total(items: ICartItem[]) {
 
 // return cart with updated products
 function cart(products: ICartItem[]) {
-  return {
-    length: products.length,
-    items: products,
-    total: formatToCurrency(total(products)),
-  };
+  localStorage.setItem(
+    "cart",
+    JSON.stringify({
+      length: products.length,
+      items: products,
+      total: formatToCurrency(total(products)),
+    })
+  );
+
+  return JSON.parse(localStorage.getItem("cart"));
 }
 
 // add a new item to cart
