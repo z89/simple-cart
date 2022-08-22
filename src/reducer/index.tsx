@@ -7,18 +7,10 @@ export const ACTIONS = {
   CLEAR: "clear",
 };
 
-// return cart with updated products
-function cart(products) {
-  return {
-    length: products.length,
-    items: products,
-    total: formatToCurrency(cartTotal(products)),
-  };
-}
-
 // calculate cart total
-function cartTotal(items: ICartItem[]) {
+function total(items: ICartItem[]) {
   let total = 0;
+
   items.length > 0
     ? items.map((item) => {
         total += item.total.raw;
@@ -28,10 +20,20 @@ function cartTotal(items: ICartItem[]) {
   return total;
 }
 
+// return cart with updated products
+function cart(products: ICartItem[]) {
+  return {
+    length: products.length,
+    items: products,
+    total: formatToCurrency(total(products)),
+  };
+}
+
 // add a new item to cart
 function add(state: ICart, target: ICartItem) {
   return cart([...state.items, { ...target, total: formatToCurrency(target.quantity * target.price.raw) }]);
 }
+
 // update an item in cart
 function update(state: ICart, action: IDispatch, target: ICartItem) {
   const qty = action.type == ACTIONS.ADD ? target.quantity + action.payload.quantity : target.quantity - action.payload.quantity;
@@ -41,19 +43,14 @@ function update(state: ICart, action: IDispatch, target: ICartItem) {
 
 // remove an item from cart
 function remove(state: ICart, target: ICartItem) {
-  let idx = 0;
+  const items = [...state.items.map((p) => p)];
 
-  const items = state.items.map((e, index) => {
-    if (e.id == target.id) {
-      idx = index;
-    } else {
-      return e;
-    }
-  });
+  items.splice(
+    state.items.findIndex((p) => p.id == target.id),
+    1
+  );
 
-  items.splice(idx, 1);
-
-  return cart(items);
+  return cart([...items]);
 }
 
 export function reducer(state: ICart, action: IDispatch) {
@@ -78,5 +75,7 @@ export function reducer(state: ICart, action: IDispatch) {
       } else {
         return state;
       }
+    default:
+      console.error("a correct action type was not specified!");
   }
 }

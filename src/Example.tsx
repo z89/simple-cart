@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { CartContext } from "./context";
 import { useContext } from "react";
 
@@ -8,6 +10,10 @@ import data from "./data/products.json";
 
 export default function Example() {
   const { state, dispatch } = useContext(CartContext);
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   const Products = () => {
     if (data.length > 0) {
