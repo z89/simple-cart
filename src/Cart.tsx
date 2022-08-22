@@ -2,10 +2,9 @@ import { useEffect } from "react";
 
 import { CartContext } from "./context";
 import { useContext } from "react";
-
 import { ACTIONS } from "./reducer";
-import Product from "./components/Product";
 
+import Product from "./components/Product";
 import data from "./data/products.json";
 
 export default function Example() {
