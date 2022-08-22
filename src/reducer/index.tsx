@@ -2,6 +2,7 @@ import { ICart, ICartItem, IDispatch } from "../context";
 import formatToCurrency from "../components/misc/formatToCurrency";
 
 export const ACTIONS = {
+  UPDATE: "update",
   ADD: "add",
   REMOVE: "remove",
   CLEAR: "clear",
@@ -35,20 +36,20 @@ function cart(products: ICartItem[]) {
 }
 
 // add a new item to cart
-function add(state: ICart, target: ICartItem) {
-  return cart([...state.items, { ...target, total: formatToCurrency(target.quantity * target.price.raw) }]);
+function add(state: ICart, payload: ICartItem) {
+  return cart([...state.items, { ...payload, total: formatToCurrency(payload.quantity * payload.price.raw) }]);
 }
 
 // update an item in cart
 function update(state: ICart, action: IDispatch, target: ICartItem) {
-  const qty = action.type == ACTIONS.ADD ? target.quantity + action.payload.quantity : target.quantity - action.payload.quantity;
+  const qty = target.quantity + action.payload.quantity;
 
   return cart(state.items.map((e) => (e.id == action.payload.id ? { ...e, quantity: qty, total: formatToCurrency(target.price.raw * qty) } : e)));
 }
 
 // remove an item from cart
 function remove(state: ICart, target: ICartItem) {
-  const items = [...state.items.map((p) => p)];
+  const items = [...state.items];
 
   items.splice(
     state.items.findIndex((p) => p.id == target.id),
@@ -64,6 +65,12 @@ export function reducer(state: ICart, action: IDispatch) {
   switch (action.type) {
     case ACTIONS.CLEAR:
       return cart([]);
+    case ACTIONS.UPDATE: // update cart item to specific quantity
+      if (action.payload.quantity > 0) {
+        return add(target != undefined ? remove(state, target) : state, action.payload);
+      } else {
+        return target != undefined ? remove(state, target) : state;
+      }
     case ACTIONS.ADD:
       if (target != undefined) {
         return update(state, action, target);
@@ -72,11 +79,7 @@ export function reducer(state: ICart, action: IDispatch) {
       }
     case ACTIONS.REMOVE:
       if (target != undefined) {
-        if (target.quantity == 1) {
-          return remove(state, action.payload);
-        } else if (target.quantity > 1) {
-          return update(state, action, target);
-        }
+        return remove(state, action.payload);
       } else {
         return state;
       }

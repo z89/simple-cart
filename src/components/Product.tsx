@@ -4,7 +4,7 @@ import { ACTIONS } from "../reducer";
 
 export default function Product({ item }) {
   const { dispatch } = useContext(CartContext);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
 
   return (
     <div>
@@ -14,7 +14,7 @@ export default function Product({ item }) {
       <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { ...item, quantity: 1 } })}>add</button>
       <button onClick={() => dispatch({ type: ACTIONS.REMOVE, payload: { ...item, quantity: 1 } })}>remove</button>
       <input style={{ width: "40px" }} type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
-      <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { ...item, quantity: quantity } })}>update</button>
+      <button onClick={() => dispatch({ type: ACTIONS.UPDATE, payload: { ...item, quantity: quantity } })}>update quantity</button>
     </div>
   );
 }
