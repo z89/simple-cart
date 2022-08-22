@@ -7,11 +7,6 @@ export const ACTIONS = {
   CLEAR: "clear",
 };
 
-// check if an item exists in cart
-function itemExists(items: ICartItem[], id: string) {
-  return items.find((item) => item.id == id);
-}
-
 // return cart with updated products
 function cart(products) {
   return {
@@ -34,63 +29,54 @@ function cartTotal(items: ICartItem[]) {
 }
 
 // add a new item to cart
-function add(state: ICart, item: ICartItem) {
-  return cart([...state.items, { ...item, total: formatToCurrency(item.quantity * item.price.raw) }]);
+function add(state: ICart, target: ICartItem) {
+  return cart([...state.items, { ...target, total: formatToCurrency(target.quantity * target.price.raw) }]);
+}
+// update an item in cart
+function update(state: ICart, action: IDispatch, target: ICartItem) {
+  const qty = action.type == ACTIONS.ADD ? target.quantity + action.payload.quantity : target.quantity - action.payload.quantity;
+
+  return cart(state.items.map((e) => (e.id == action.payload.id ? { ...e, quantity: qty, total: formatToCurrency(target.price.raw * qty) } : e)));
 }
 
 // remove an item from cart
-function remove(state: ICart, item: ICartItem) {
+function remove(state: ICart, target: ICartItem) {
   let idx = 0;
+
   const items = state.items.map((e, index) => {
-    if (e.id == item.id) {
+    if (e.id == target.id) {
       idx = index;
     } else {
       return e;
     }
   });
+
   items.splice(idx, 1);
 
   return cart(items);
 }
 
-// update an item in cart
-function update(state: ICart, updated: ICartItem, item: ICartItem, mode: string) {
-  const qty = mode == "increment" ? item.quantity + updated.quantity : item.quantity - updated.quantity;
-
-  return cart(state.items.map((e) => (e.id == updated.id ? { ...e, quantity: qty, total: formatToCurrency(item.price.raw * qty) } : e)));
-}
-
-function addToCart(state, payload) {
-  const res = itemExists(state.items, payload.id);
-
-  if (res == undefined) {
-    return add(state, payload);
-  } else {
-    return update(state, payload, res, "increment");
-  }
-}
-
-function removeFromCart(state, payload) {
-  const res = itemExists(state.items, payload.id);
-
-  if (res != undefined) {
-    if (res.quantity == 1) {
-      return remove(state, payload);
-    } else if (res.quantity > 1) {
-      return update(state, payload, res, "decrement");
-    }
-  } else {
-    return state;
-  }
-}
-
 export function reducer(state: ICart, action: IDispatch) {
+  const target = action.type != ACTIONS.CLEAR ? state.items.find((item) => item.id == action.payload.id) : null;
+
   switch (action.type) {
-    case ACTIONS.ADD:
-      return addToCart(state, action.payload);
-    case ACTIONS.REMOVE:
-      return removeFromCart(state, action.payload);
     case ACTIONS.CLEAR:
       return cart([]);
+    case ACTIONS.ADD:
+      if (target != undefined) {
+        return update(state, action, target);
+      } else {
+        return add(state, action.payload);
+      }
+    case ACTIONS.REMOVE:
+      if (target != undefined) {
+        if (target.quantity == 1) {
+          return remove(state, action.payload);
+        } else if (target.quantity > 1) {
+          return update(state, action, target);
+        }
+      } else {
+        return state;
+      }
   }
 }
