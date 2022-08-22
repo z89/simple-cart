@@ -31,16 +31,16 @@ export default function Example() {
 
   return (
     <div>
-      <h1>cart state:</h1>
-      <p>cart length: {state.length}</p>
-      <p>cart total: {state.total.formatted_with_code}</p>
+      <h1>cart:</h1>
+      <p>length: {state.length}</p>
+      <p>total: {state.total.formatted_with_code}</p>
       <button onClick={() => dispatch({ type: ACTIONS.CLEAR })}>clear cart</button>
 
-      <h3>cart items</h3>
+      <h3>cart items:</h3>
       <hr />
       {CartItems()}
 
-      <h3>products</h3>
+      <h3>products:</h3>
       <hr />
       {ProductItems()}
     </div>
