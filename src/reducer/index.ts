@@ -21,7 +21,7 @@ function total(items: ICartItem[]) {
   return total;
 }
 
-// return cart with updated products
+// update & retrieve cart from localStorage
 function cart(products: ICartItem[]) {
   localStorage.setItem(
     "cart",
@@ -65,7 +65,7 @@ export function reducer(state: ICart, action: IDispatch) {
   switch (action.type) {
     case ACTIONS.CLEAR:
       return cart([]);
-    case ACTIONS.UPDATE: // update cart item to specific quantity
+    case ACTIONS.UPDATE:
       if (action.payload.quantity > 0) {
         return add(target != undefined ? remove(state, target) : state, action.payload);
       } else {

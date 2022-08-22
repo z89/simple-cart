@@ -1,6 +1,6 @@
 import { CartProvider } from "./store";
 
-import Cart from "./Cart";
+import { Cart } from "./Cart";
 
 function App() {
   return (

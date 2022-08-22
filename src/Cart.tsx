@@ -1,14 +1,13 @@
-import { useEffect } from "react";
+import { useContext } from "react";
 
 import { CartContext } from "./context";
-import { useContext } from "react";
 import { ACTIONS } from "./reducer";
+import { ProductItem } from "./components/ProductItem";
+import { CartItem } from "./components/CartItem";
 
 import data from "./data/products.json";
-import ProductItem from "./components/ProductItem";
-import CartItem from "./components/CartItem";
 
-export default function Example() {
+export const Cart = () => {
   const { state, dispatch } = useContext(CartContext);
 
   const ProductItems = () => {
@@ -45,4 +44,4 @@ export default function Example() {
       {ProductItems()}
     </div>
   );
-}
+};

@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
+
 import { CartContext } from "../context";
 import { ACTIONS } from "../reducer";
 
-export default function CartItem({ item }) {
+export const CartItem = ({ item }) => {
   const { dispatch } = useContext(CartContext);
   const [quantity, setQuantity] = useState(0);
 
   return (
-    <div>
+    <>
       <br />
       <img style={{ width: "100px" }} src={item.image} />
       <p>name: {item.name}</p>
@@ -19,6 +20,6 @@ export default function CartItem({ item }) {
       <br />
       <input style={{ width: "40px" }} type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
       <button onClick={() => dispatch({ type: ACTIONS.UPDATE, payload: { ...item, quantity: quantity } })}>update quantity</button>
-    </div>
+    </>
   );
-}
+};
