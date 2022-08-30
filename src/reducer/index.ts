@@ -1,4 +1,4 @@
-import { ICart, ICartItem, IDispatch } from "../context";
+import { ICart, ICartItem, IDispatch, initialState } from "../context";
 import formatToCurrency from "../components/misc/formatToCurrency";
 
 export const ACTIONS = {
@@ -59,12 +59,16 @@ function remove(state: ICart, target: ICartItem) {
   return cart([...items]);
 }
 
+function findTarget(state: ICart, action: IDispatch) {
+  return action.payload != undefined ? state.items.find((item) => item.id == action.payload.id) : null;
+}
+
 export function reducer(state: ICart, action: IDispatch) {
-  const target = action.type != ACTIONS.CLEAR ? state.items.find((item) => item.id == action.payload.id) : null;
+  const target = findTarget(state, action);
 
   switch (action.type) {
     case ACTIONS.CLEAR:
-      return cart([]);
+      return cart(initialState.items);
     case ACTIONS.UPDATE:
       if (action.payload.quantity > 0) {
         return update(state, action);

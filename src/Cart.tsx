@@ -33,6 +33,7 @@ export const Cart = () => {
       <h1>cart:</h1>
       <p>length: {state.length}</p>
       <p>total: {state.total.formatted_with_code}</p>
+
       <button onClick={() => dispatch({ type: ACTIONS.CLEAR })}>clear cart</button>
 
       <h3>cart items:</h3>

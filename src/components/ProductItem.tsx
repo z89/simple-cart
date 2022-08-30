@@ -10,8 +10,10 @@ export const ProductItem = ({ item }) => {
     <>
       <br />
       <img style={{ width: "100px" }} src={item.image} />
+
       <p>name: {item.name}</p>
       <p>price: {item.price.formatted_with_code}</p>
+
       <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { ...item, quantity: 1 } })}>add to cart</button>
       <br />
     </>
