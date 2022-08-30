@@ -37,14 +37,14 @@ function cart(products: ICartItem[]) {
 
 // add a new item to cart
 function add(state: ICart, payload: ICartItem) {
-  return cart([...state.items, { ...payload, total: formatToCurrency(payload.quantity * payload.price.raw) }]);
+  return cart([...state.items, { ...payload, quantity: payload.quantity, total: formatToCurrency(payload.quantity * payload.price.raw) }]);
 }
 
 // update an item in cart
-function update(state: ICart, action: IDispatch, target: ICartItem) {
-  const qty = target.quantity + action.payload.quantity;
+function update(state: ICart, action: IDispatch) {
+  const item = action.payload;
 
-  return cart(state.items.map((e) => (e.id == action.payload.id ? { ...e, quantity: qty, total: formatToCurrency(target.price.raw * qty) } : e)));
+  return cart(state.items.map((old) => (old.id == item.id ? { ...item, quantity: item.quantity, total: formatToCurrency(item.price.raw * item.quantity) } : old)));
 }
 
 // remove an item from cart
@@ -67,13 +67,13 @@ export function reducer(state: ICart, action: IDispatch) {
       return cart([]);
     case ACTIONS.UPDATE:
       if (action.payload.quantity > 0) {
-        return add(target != undefined ? remove(state, target) : state, action.payload);
+        return update(state, action);
       } else {
         return target != undefined ? remove(state, target) : state;
       }
     case ACTIONS.ADD:
       if (target != undefined) {
-        return update(state, action, target);
+        return update(state, action);
       } else {
         return add(state, action.payload);
       }
