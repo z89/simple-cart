@@ -7,6 +7,9 @@ function App() {
     <>
       <CartStore>
         <Cart />
+
+        <hr />
+
         <Products />
       </CartStore>
     </>
