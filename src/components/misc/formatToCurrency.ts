@@ -1,4 +1,4 @@
-function symbolFormatting(num: number, code?: string) {
+export function symbolFormatting(num: number, code?: string) {
   const decimal = num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1");
   return code != null ? "$" + decimal + " " + code : "$" + decimal;
 }

@@ -11,19 +11,19 @@ describe("product initialisation", () => {
   });
 
   it("title mounts", () => {
-    cy.get('[data-cy="subtitle"]').should("exist");
+    cy.get('[data-cy="subtitle"]').should("contain", "products:");
   });
 
-  it("each product has its components mounted", () => {
+  it("each product has all its components mounted", () => {
     data.forEach((item) => {
-      const itemSelector = `[data-cy=${item.id}]`;
+      const itemSelector = `[data-cy=product_${item.id}]`;
 
-      cy.get(itemSelector);
+      cy.get(itemSelector).should("exist");
 
-      cy.get(`${itemSelector} [data-cy=img]`);
-      cy.get(`${itemSelector} [data-cy=name]`);
-      cy.get(`${itemSelector} [data-cy=price]`);
-      cy.get(`${itemSelector} [data-cy=add]`);
+      cy.get(`${itemSelector} [data-cy=img]`).should("have.attr", "src", item.image);
+      cy.get(`${itemSelector} [data-cy=name]`).should("contain", item.name);
+      cy.get(`${itemSelector} [data-cy=price]`).should("contain", item.price.formatted_with_code);
+      cy.get(`${itemSelector} [data-cy=add]`).should("exist");
     });
   });
 });

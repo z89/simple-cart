@@ -10,11 +10,11 @@ describe("cart initialisation", () => {
   });
 
   it("title mounts", () => {
-    cy.get('[data-cy="title"]').should("exist");
+    cy.get('[data-cy="title"]').should("contain", "cart:");
   });
 
   it("subtitle mounts", () => {
-    cy.get('[data-cy="subtitle"]').should("exist");
+    cy.get('[data-cy="subtitle"]').should("contain", "items:");
   });
 
   it("clear cart button mounts", () => {
@@ -22,14 +22,14 @@ describe("cart initialisation", () => {
   });
 
   it("length should default to 0", () => {
-    cy.get("[data-cy=length]").should("have.text", "length: 0");
+    cy.get("[data-cy=length]").should("contain", "length: 0");
   });
 
   it("total should default to 0", () => {
-    cy.get("[data-cy=total]").should("have.text", "total: $0.00 AUD");
+    cy.get("[data-cy=total]").should("contain", "total: $0.00 AUD");
   });
 
   it("items should be empty", () => {
-    cy.get('[data-cy="items"] > p').should("have.text", "no items in cart");
+    cy.get('[data-cy="items"] > p').should("contain", "no items in cart");
   });
 });

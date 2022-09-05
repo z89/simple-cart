@@ -19,7 +19,7 @@ export const ProductItem = ({ item }) => {
   // console.log(state.items.find((i) => i.id === item.id));
 
   return (
-    <div style={{ backgroundColor: "LavenderBlush" }} data-cy={item.id}>
+    <div style={{ backgroundColor: "LavenderBlush" }} data-cy={"product_" + item.id}>
       <p data-cy="name">
         <b>{item.name}</b>
       </p>
