@@ -23,7 +23,7 @@ describe("product initialisation", () => {
       cy.get(`${itemSelector} [data-cy=img]`);
       cy.get(`${itemSelector} [data-cy=name]`);
       cy.get(`${itemSelector} [data-cy=price]`);
-      cy.get(`${itemSelector} [data-cy=button]`);
+      cy.get(`${itemSelector} [data-cy=add]`);
     });
   });
 });
