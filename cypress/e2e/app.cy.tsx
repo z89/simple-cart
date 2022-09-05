@@ -48,13 +48,13 @@ describe("cart manipulation", () => {
     it("clicking 'add to cart' button for each product", () => {
       cy.fixture("products.json").then((data) => {
         data.forEach((product) => {
-          // click add to cart button for each product
+          // click 'add to cart' button for each product
           cy.get(`[data-cy=product_${product.id}] [data-cy=add]`).click();
         });
       });
     });
 
-    it("check the products were correctly added to cart", () => {
+    it("check products were correctly added to cart", () => {
       cy.fixture("products.json").then((data) => {
         checkCartValues(data.length);
       });
@@ -70,15 +70,11 @@ describe("cart manipulation", () => {
           // update quantity input to 5 & click update
           cy.get(`${itemSelector} > [data-cy=input]`).invoke("val", "").type("5");
           cy.get(`${itemSelector} [data-cy=update]`).click();
-
-          // check quantity is 5 & total is correct
-          cy.get(`${itemSelector} [data-cy=quantity]`).should("contain", "quantity: 5");
-          cy.get(`${itemSelector} [data-cy=total]`).should("contain", `total: ${symbolFormatting(product.price.raw * 5, "AUD")}`);
         });
       });
     });
 
-    it("check the cart items were correctly updated in cart", () => {
+    it("check cart items were correctly updated in cart", () => {
       cy.fixture("products.json").then((data) => {
         checkCartValues(data.length);
       });
@@ -93,14 +89,10 @@ describe("cart manipulation", () => {
         // update quantity input to 5 & click update
         cy.get(`${itemSelector} > [data-cy=input]`).invoke("val", "").type("50");
         cy.get(`${itemSelector} [data-cy=update]`).click();
-
-        // check cart item DOM quantity is 50 & total is correct
-        cy.get(`${itemSelector} [data-cy=quantity]`).should("contain", "quantity: 50");
-        cy.get(`${itemSelector} [data-cy=total]`).should("contain", `total: ${symbolFormatting(data[0].price.raw * 50, "AUD")}`);
       });
     });
 
-    it("check the cart item quantity was updated in cart", () => {
+    it("check cart item quantity was updated in cart", () => {
       cy.fixture("products.json").then((data) => {
         checkCartValues(data.length);
       });
@@ -117,7 +109,39 @@ describe("cart manipulation", () => {
       });
     });
 
-    it("check cart has correct values after removing item", () => {});
+    it("check cart has correct values after removing item", () => {
+      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+    });
+  });
+
+  describe("add a single product", () => {
+    it("adding a product", () => {
+      cy.fixture("products.json").then((data) => {
+        const itemSelector = `[data-cy=product_${data[1].id}]`;
+
+        // click the 'add to cart' button on cart item
+        cy.get(`${itemSelector} [data-cy=add]`).click();
+      });
+    });
+
+    it("check cart has correct values after adding item", () => {
+      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+    });
+  });
+
+  describe("increment a single product", () => {
+    it("incrementing product", () => {
+      cy.fixture("products.json").then((data) => {
+        const itemSelector = `[data-cy=product_${data[1].id}]`;
+
+        // click the 'add to cart' button on cart item
+        cy.get(`${itemSelector} [data-cy=add]`).click();
+      });
+    });
+
+    it("check cart has correct values after incrementing item", () => {
+      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+    });
   });
 
   describe("cart persistence in localStorage", () => {
