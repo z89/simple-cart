@@ -14,7 +14,9 @@ export const ProductItem = ({ item }) => {
       <p>name: {item.name}</p>
       <p>price: {item.price.formatted_with_code}</p>
 
-      <button onClick={() => dispatch({ type: ACTIONS.ADD, payload: { ...item, quantity: 1 } })}>add to cart</button>
+      <button data-cy={item.id} onClick={() => dispatch({ type: ACTIONS.ADD, payload: { ...item, quantity: 1 } })}>
+        add to cart
+      </button>
       <br />
     </>
   );
