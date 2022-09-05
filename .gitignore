@@ -1,9 +1,5 @@
-# dependencies
 /node_modules
-
-# production
 /build
-
 yarn.lock
 package-lock.json
 yarn-error.log
