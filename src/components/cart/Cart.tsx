@@ -5,7 +5,7 @@ import { ACTIONS } from "../../reducer";
 
 import { CartItem } from "./CartItem";
 
-export const Cart = () => {
+const Cart = () => {
   const { state, dispatch } = useContext(CartContext);
 
   const CartItems = () => {
@@ -19,7 +19,7 @@ export const Cart = () => {
   };
 
   return (
-    <div data-cy="root">
+    <div data-cy="cart">
       <h1 data-cy="title">cart:</h1>
       <p data-cy="length">length: {state.length}</p>
       <p data-cy="total">total: {state.total.formatted_with_code}</p>
@@ -33,3 +33,5 @@ export const Cart = () => {
     </div>
   );
 };
+
+export default Cart;

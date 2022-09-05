@@ -1,19 +1,19 @@
-import { Cart } from "./Cart";
+import Cart from "./Cart";
 
-describe("initialisation", () => {
+describe("cart initialisation", () => {
   beforeEach(() => {
     cy.mount(<Cart />);
   });
 
-  it("cart component mounts", () => {
-    cy.get('[data-cy="root"]').should("exist");
+  it("<Cart /> mounts", () => {
+    cy.get('[data-cy="cart"]').should("exist");
   });
 
-  it("cart title mounts", () => {
+  it("title mounts", () => {
     cy.get('[data-cy="title"]').should("exist");
   });
 
-  it("cart subtitle mounts", () => {
+  it("subtitle mounts", () => {
     cy.get('[data-cy="subtitle"]').should("exist");
   });
 

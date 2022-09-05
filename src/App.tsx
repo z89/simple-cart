@@ -1,29 +1,15 @@
-import { CartStore } from "./store";
-import { Cart } from "./components/cart/Cart";
-import { ProductItem } from "./components/ProductItem";
-
-import data from "./data/products.json";
+import CartStore from "./store";
+import Cart from "./components/cart/Cart";
+import Products from "./components/products/Products";
 
 function App() {
-  const ProductItems = () => {
-    if (data.length > 0) {
-      return data.map((item) => {
-        return <ProductItem key={item.id} item={item} />;
-      });
-    }
-  };
-
   return (
-    <div id="root">
+    <>
       <CartStore>
         <Cart />
+        <Products />
       </CartStore>
-
-      <hr />
-
-      <h3>products:</h3>
-      {ProductItems()}
-    </div>
+    </>
   );
 }
 

@@ -7,3 +7,5 @@ export const CartStore = ({ children }: { children: ReactNode }) => {
 
   return <CartContext.Provider value={{ state: state, dispatch: dispatch }}>{children}</CartContext.Provider>;
 };
+
+export default CartStore;
