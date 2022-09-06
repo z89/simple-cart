@@ -2,7 +2,6 @@ import formatToCurrency, { symbolFormatting } from "../../src/components/misc/fo
 
 function checkCartValues(length) {
   // check cart has correct localStorage values
-
   cy.getLocalStorage("cart").then((c) => {
     let cart = JSON.parse(c);
 

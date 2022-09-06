@@ -1,6 +1,6 @@
 {
-  "short_name": "reducer",
-  "name": "react-reducer",
+  "short_name": "cart",
+  "name": "simple cart",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
