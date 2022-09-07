@@ -11,7 +11,7 @@
   {
     "id": "sku_f223faa96f22",
     "image": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.tasteatlas.com%2Fimages%2Fingredients%2F86daeea8e07f40069975a24b7ba0f706.jpg&f=1&nofb=1",
-    "name": "Apple",
+    "name": "Apples",
     "desc": "Yummy red fruit",
     "price": { "raw": 15, "formatted": "15", "formatted_with_code": "$15.00 AUD", "formatted_with_symbol": "$15.00" },
     "quantity": 0,
@@ -20,7 +20,7 @@
   {
     "id": "sku_78e7771b8b46",
     "image": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.abetterchoice.com.au%2Fapp%2Fuploads%2F2019%2F08%2FIMG_4086-copy.jpg%3Fx68214&f=1&nofb=1",
-    "name": "Orange",
+    "name": "Oranges",
     "desc": "Yummy orange fruit",
     "price": { "raw": 20, "formatted": "20", "formatted_with_code": "$20.00 AUD", "formatted_with_symbol": "$20.00" },
     "quantity": 0,
