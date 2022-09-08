@@ -1,28 +1,42 @@
 import { createContext } from "react";
 
-import formatToCurrency from "../components/misc/formatToCurrency";
+import { formatToCurrency } from "../components/misc/formatToCurrency";
 
-export interface ISubtotal {
+export interface IPrice {
   raw: number;
   formatted: string;
   formatted_with_symbol: string;
   formatted_with_code: string;
 }
 
-export interface ICartItem {
+export interface IProduct {
   id: string;
   image: string;
   name: string;
   desc: string;
-  price: ISubtotal;
+  price: IPrice;
   quantity: number;
-  total: ISubtotal;
+  total: IPrice;
 }
 
 export interface ICart {
   length: number;
-  items: ICartItem[];
-  total: ISubtotal;
+  items: IProduct[];
+  total: IPrice;
+}
+
+export interface IPayload {
+  product: IProduct;
+}
+
+export interface IDispatch {
+  type: string;
+  payload?: IPayload;
+}
+
+interface ICartContext {
+  state: ICart;
+  dispatch: React.Dispatch<IDispatch>;
 }
 
 export const initialState: ICart = {
@@ -30,15 +44,5 @@ export const initialState: ICart = {
   items: [],
   total: formatToCurrency(0),
 };
-
-export interface IDispatch {
-  type: string;
-  payload?: ICartItem;
-}
-
-interface ICartContext {
-  state: ICart;
-  dispatch: React.Dispatch<IDispatch>;
-}
 
 export const CartContext = createContext<ICartContext>({ state: initialState, dispatch: () => {} });

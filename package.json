@@ -6,7 +6,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "cypress run --e2e",
+    "test": "cypress run",
     "cypress": "cypress open",
     "eject": "react-scripts eject"
   },

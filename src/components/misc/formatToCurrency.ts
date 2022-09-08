@@ -3,6 +3,6 @@ export function symbolFormatting(num: number, code?: string) {
   return code != null ? "$" + decimal + " " + code : "$" + decimal;
 }
 
-export default function formatToCurrency(num: number) {
+export function formatToCurrency(num: number) {
   return { raw: num, formatted: num.toString(), formatted_with_code: symbolFormatting(num, "AUD"), formatted_with_symbol: symbolFormatting(num) };
 }

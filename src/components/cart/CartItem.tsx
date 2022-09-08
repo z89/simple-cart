@@ -1,11 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import { CartContext } from "../../context";
 import { ACTIONS } from "../../reducer";
 
 export const CartItem = ({ item }) => {
   const { dispatch } = useContext(CartContext);
-  const [quantity, setQuantity] = useState(item.quantity);
 
   return (
     <div style={{ backgroundColor: "AliceBlue" }} data-cy={"cart_" + item.id}>
@@ -16,16 +15,20 @@ export const CartItem = ({ item }) => {
       <p data-cy="quantity">quantity: {item.quantity}</p>
       <p data-cy="total">total: {item.total.formatted_with_code}</p>
 
-      <button data-cy="remove" onClick={() => dispatch({ type: ACTIONS.REMOVE, payload: { ...item, quantity: 1 } })}>
+      <button data-cy="remove" onClick={() => dispatch({ type: ACTIONS.REMOVE, payload: { product: item } })}>
         remove
       </button>
 
       <br />
-
-      <input data-cy="input" style={{ width: "40px" }} type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
-      <button data-cy="update" onClick={() => dispatch({ type: ACTIONS.UPDATE, payload: { ...item, quantity: quantity } })}>
-        update quantity
-      </button>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "80px" }}>
+        <button data-cy="decrement" onClick={() => dispatch({ type: ACTIONS.UPDATE, payload: { product: { ...item, quantity: item.quantity - 1 } } })}>
+          -
+        </button>
+        <p> {item.quantity}</p>
+        <button data-cy="increment" onClick={() => dispatch({ type: ACTIONS.UPDATE, payload: { product: { ...item, quantity: item.quantity + 1 } } })}>
+          +
+        </button>
+      </div>
     </div>
   );
 };

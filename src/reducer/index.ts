@@ -1,5 +1,5 @@
-import { ICart, ICartItem, IDispatch, initialState } from "../context";
-import formatToCurrency from "../components/misc/formatToCurrency";
+import { ICart, IProduct, IPayload, IDispatch, initialState } from "../context";
+import { formatToCurrency } from "../components/misc/formatToCurrency";
 
 export const ACTIONS = {
   UPDATE: "update",
@@ -9,7 +9,7 @@ export const ACTIONS = {
 };
 
 // calculate cart total
-function total(items: ICartItem[]) {
+function total(items: IProduct[]) {
   let total = 0;
 
   items.length > 0
@@ -22,7 +22,7 @@ function total(items: ICartItem[]) {
 }
 
 // update & retrieve cart from localStorage
-function cart(products: ICartItem[]) {
+function cart(products: IProduct[]) {
   localStorage.setItem(
     "cart",
     JSON.stringify({
@@ -36,19 +36,20 @@ function cart(products: ICartItem[]) {
 }
 
 // add a new item to cart
-function add(state: ICart, payload: ICartItem) {
-  return cart([...state.items, { ...payload, quantity: payload.quantity, total: formatToCurrency(payload.quantity * payload.price.raw) }]);
+function add(state: ICart, payload: IPayload) {
+  return cart([...state.items, { ...payload.product, quantity: payload.product.quantity, total: formatToCurrency(payload.product.quantity * payload.product.price.raw) }]);
 }
 
 // update an item in cart
 function update(state: ICart, action: IDispatch) {
-  const item = action.payload;
+  const item = action.payload.product;
+  const quantity = action.payload.product.quantity;
 
-  return cart(state.items.map((old) => (old.id == item.id ? { ...item, quantity: item.quantity, total: formatToCurrency(item.price.raw * item.quantity) } : old)));
+  return cart(state.items.map((old) => (old.id == item.id ? { ...item, quantity: quantity, total: formatToCurrency(item.price.raw * quantity) } : old)));
 }
 
 // remove an item from cart
-function remove(state: ICart, target: ICartItem) {
+function remove(state: ICart, target: IProduct) {
   const items = [...state.items];
 
   items.splice(
@@ -60,7 +61,7 @@ function remove(state: ICart, target: ICartItem) {
 }
 
 function findTarget(state: ICart, action: IDispatch) {
-  return action.payload != undefined ? state.items.find((item) => item.id == action.payload.id) : null;
+  return action.payload != undefined ? state.items.find((item) => item.id == action.payload.product.id) : null;
 }
 
 export function reducer(state: ICart, action: IDispatch) {
@@ -70,7 +71,7 @@ export function reducer(state: ICart, action: IDispatch) {
     case ACTIONS.CLEAR:
       return cart(initialState.items);
     case ACTIONS.UPDATE:
-      if (action.payload.quantity > 0) {
+      if (action.payload.product.quantity > 0) {
         return update(state, action);
       } else {
         return target != undefined ? remove(state, target) : state;
@@ -83,7 +84,7 @@ export function reducer(state: ICart, action: IDispatch) {
       }
     case ACTIONS.REMOVE:
       if (target != undefined) {
-        return remove(state, action.payload);
+        return remove(state, action.payload.product);
       } else {
         return state;
       }

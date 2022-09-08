@@ -1,20 +1,19 @@
-import formatToCurrency, { symbolFormatting } from "../../src/components/misc/formatToCurrency";
+import { add, findLastIndex } from "cypress/types/lodash";
+import { formatToCurrency, symbolFormatting } from "../../src/components/misc/formatToCurrency";
 
-function checkCartValues(length) {
+function checkCartValues(expectedProducts, expectedLength, expectedTotal) {
   // check cart has correct localStorage values
   cy.getLocalStorage("cart").then((c) => {
+    expect(c, "cart from localStorage is null").not.be.null;
+
     let cart = JSON.parse(c);
 
-    // calculate total price of all items in cart
-    let total = 0;
-    cart.items.map((item) => (total += item.price.raw * item.quantity));
+    // check localStorage cart
+    expect(cart.length).equal(expectedLength);
+    expect(JSON.stringify(cart.items)).equal(JSON.stringify(expectedProducts));
+    expect(JSON.stringify(cart.total)).equal(JSON.stringify(expectedTotal));
 
-    // check cart has correct localStorage values
-    expect(cart.length).to.equal(length);
-    expect(cart.items.length).to.equal(length);
-    expect(JSON.stringify(cart.total)).to.equal(JSON.stringify(formatToCurrency(total)));
-
-    // check cart item DOM values match localStorage values
+    //  check DOM values match valid localStorage cart
     cart.items.forEach((item) => {
       const itemSelector = `[data-cy=cart_${item.id}]`;
 
@@ -23,145 +22,166 @@ function checkCartValues(length) {
       cy.get(`${itemSelector} [data-cy=total]`).should("contain", `total: ${symbolFormatting(item.price.raw * item.quantity, "AUD")}`);
     });
 
-    // check cart DOM values match localStorage values
     cy.get("[data-cy=cart] [data-cy=length]").should("contain", `length: ${cart.items.length}`);
-    cy.get("[data-cy=cart] [data-cy=total]").should("contain", `total: ${symbolFormatting(total, "AUD")}`);
+    cy.get("[data-cy=cart] [data-cy=total]").should("contain", `total: ${symbolFormatting(expectedTotal.raw, "AUD")}`);
+  });
+}
+
+function check(fixture, quantity, type) {
+  cy.fixture(fixture).then((data) => {
+    let products = [];
+    let res = (product, quantity) => products.push({ ...product, quantity: quantity, total: formatToCurrency(product.price.raw * quantity) });
+
+    data.forEach((product) => {
+      switch (type) {
+        case "add":
+          res(product, quantity);
+          return;
+        case "remove":
+          if (product.id !== data[0].id) {
+            res(product, quantity);
+          }
+          return;
+        case "single":
+          if (product.id === data[data.length - 1].id) {
+            res(product, quantity + 1);
+          } else {
+            res(product, quantity);
+          }
+          return;
+      }
+    });
+
+    checkCartValues(products, products.length, formatToCurrency(products.reduce((total, product) => total + product.price.raw * product.quantity, 0)));
+  });
+}
+function addProducts(fixture) {
+  cy.fixture(fixture).then((data) => {
+    data.forEach((product) => {
+      // click 'add to cart' on product
+      cy.get(`[data-cy=product_${product.id}] [data-cy=add]`).click();
+    });
   });
 }
 
 describe("cart manipulation", () => {
+  // choose the example fixture to test on
+  const fixture = "products";
+
+  // generate random number for tests
+  const rand = Math.floor(Math.random() * 10) + 1;
+
   before(() => {
     cy.clearLocalStorageSnapshot();
   });
 
   beforeEach(() => {
-    cy.restoreLocalStorage();
     cy.visit("/");
   });
 
-  afterEach(() => {
-    cy.saveLocalStorage();
-  });
-
-  describe("adding all products to cart", () => {
-    it("clicking 'add to cart' button for each product", () => {
-      cy.fixture("products.json").then((data) => {
-        data.forEach((product) => {
-          // click 'add to cart' button for each product
-          cy.get(`[data-cy=product_${product.id}] [data-cy=add]`).click();
-        });
-      });
-    });
-
-    it("check products were correctly added to cart", () => {
-      cy.fixture("products.json").then((data) => {
-        checkCartValues(data.length);
+  describe("checking example fixture has at least one product", () => {
+    it("contains at least one product", () => {
+      cy.fixture(fixture).then((products) => {
+        expect(products.length).greaterThan(0);
       });
     });
   });
 
-  describe("updating all cart item quantities", () => {
-    it("updating each item quantity via input & button", () => {
-      cy.fixture("products.json").then((data) => {
+  describe("adding products to cart", () => {
+    it("clicking 'add to cart' for each product", () => {
+      addProducts(fixture);
+
+      check(fixture, 1, "add");
+    });
+  });
+
+  describe("updating cart item quantities", () => {
+    it(`clicking 'increment' ${rand} times on each cart item`, () => {
+      addProducts(fixture);
+
+      cy.fixture(fixture).then((data) => {
         data.forEach((product) => {
           const itemSelector = `[data-cy=cart_${product.id}]`;
 
-          // update quantity input to 5 & click update
-          cy.get(`${itemSelector} > [data-cy=input]`).invoke("val", "").type("5");
-          cy.get(`${itemSelector} [data-cy=update]`).click();
+          // click '+' three times on each item
+          for (let i = 0; i < rand; i++) {
+            cy.get(`${itemSelector} [data-cy=increment]`).click();
+          }
         });
       });
+
+      check(fixture, rand + 1, "add");
     });
 
-    it("check cart items were correctly updated in cart", () => {
-      cy.fixture("products.json").then((data) => {
-        checkCartValues(data.length);
+    it("clicking 'decrement' once on each cart item", () => {
+      addProducts(fixture);
+
+      cy.fixture(fixture).then((data) => {
+        data.forEach((product) => {
+          const itemSelector = `[data-cy=cart_${product.id}]`;
+
+          // click '+' three times on each item
+          for (let i = 0; i < rand; i++) {
+            cy.get(`${itemSelector} [data-cy=increment]`).click();
+          }
+
+          // click '-' once on each item
+          cy.get(`${itemSelector} [data-cy=decrement]`).click();
+        });
       });
+
+      check(fixture, rand, "add");
     });
   });
 
-  describe("update a single cart item quantity", () => {
-    it("updating the cart item quantity via input & button", () => {
-      cy.fixture("products.json").then((data) => {
+  describe("remove a cart item", () => {
+    it("clicking 'remove' on first cart item", () => {
+      addProducts(fixture);
+
+      cy.fixture(fixture).then((data) => {
         const itemSelector = `[data-cy=cart_${data[0].id}]`;
 
-        // update quantity input to 5 & click update
-        cy.get(`${itemSelector} > [data-cy=input]`).invoke("val", "").type("50");
-        cy.get(`${itemSelector} [data-cy=update]`).click();
-      });
-    });
-
-    it("check cart item quantity was updated in cart", () => {
-      cy.fixture("products.json").then((data) => {
-        checkCartValues(data.length);
-      });
-    });
-  });
-
-  describe("remove a single product", () => {
-    it("removing a product", () => {
-      cy.fixture("products.json").then((data) => {
-        const itemSelector = `[data-cy=cart_${data[1].id}]`;
-
-        // click the remove button on cart item
+        // click the 'remove' on first cart item
         cy.get(`${itemSelector} [data-cy=remove]`).click();
       });
-    });
 
-    it("check cart has correct values after removing item", () => {
-      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+      check(fixture, 1, "remove");
     });
   });
 
-  describe("add a single product", () => {
-    it("adding a product", () => {
-      cy.fixture("products.json").then((data) => {
-        const itemSelector = `[data-cy=product_${data[1].id}]`;
+  describe("increment a cart item via 'add to cart'", () => {
+    it("clicking 'add to cart' on last product", () => {
+      addProducts(fixture);
 
-        // click the 'add to cart' button on cart item
+      cy.fixture(fixture).then((data) => {
+        const itemSelector = `[data-cy=product_${data[data.length - 1].id}]`;
+
+        // click 'add to cart' on last product
         cy.get(`${itemSelector} [data-cy=add]`).click();
       });
-    });
 
-    it("check cart has correct values after adding item", () => {
-      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+      check(fixture, 1, "single");
     });
   });
 
-  describe("increment a single product", () => {
-    it("incrementing product", () => {
-      cy.fixture("products.json").then((data) => {
-        const itemSelector = `[data-cy=product_${data[1].id}]`;
+  describe("clear cart", () => {
+    it("click 'clear cart' button", () => {
+      addProducts(fixture);
 
-        // click the 'add to cart' button on cart item
-        cy.get(`${itemSelector} [data-cy=add]`).click();
-      });
-    });
+      cy.get("[data-cy=cart] [data-cy=clear]").click();
 
-    it("check cart has correct values after incrementing item", () => {
-      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+      cy.get("[data-cy=items] > p").should("contain", "no items in cart");
+      check(fixture, 0, "clear");
     });
   });
 
   describe("cart persistence in localStorage", () => {
     it("check cart is persistent after reload", () => {
+      addProducts(fixture);
+
       cy.reload();
 
-      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
-    });
-  });
-
-  describe("clear cart", () => {
-    it("clear cart via button", () => {
-      cy.get("[data-cy=cart] [data-cy=clear]").click();
-    });
-
-    it("check cart items has been cleared", () => {
-      cy.get("[data-cy=items] > p").should("contain", "no items in cart");
-    });
-
-    it("check cart has correct values after clearing", () => {
-      checkCartValues(JSON.parse(localStorage.getItem("cart")).items.length);
+      check(fixture, 1, "add");
     });
   });
 });
