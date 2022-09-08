@@ -1,19 +1,18 @@
-name: end-to-end testing
-on: [push]
+name: e2e testing
+on: [deployment_status]
 jobs:
-  cypress:
-    runs-on: ubuntu-20.04
+  e2e:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout  🛎
         uses: actions/checkout@v2
-      - name: setup npm package
+      - name: Setup  🔧
         run: npm init -y && npm install
-      - name: cypress.io
+      - name: Cypress Tests  🏁
         uses: cypress-io/github-action@v4
         with:
-          start: npm start
-          record: true
-          config: baseUrl=https://simple-cart-z89.vercel.app/
+          config: baseUrl=${{ github.event.deployment_status.target_url }}
           spec: "cypress/**"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

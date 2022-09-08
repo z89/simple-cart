@@ -1,4 +1,3 @@
-import { add, findLastIndex } from "cypress/types/lodash";
 import { formatToCurrency, symbolFormatting } from "../../src/components/misc/formatToCurrency";
 
 function checkCartValues(expectedProducts, expectedLength, expectedTotal) {
